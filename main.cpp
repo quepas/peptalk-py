@@ -4,7 +4,9 @@
 
 #include "timing.hpp"
 #include "counting.hpp"
+#include "counting_in_file.hpp"
 #include "profiling.hpp"
+#include "profiling_in_file.hpp"
 
 using namespace peptalk;
 using std::runtime_error;
@@ -37,36 +39,36 @@ void TimingClose() {
 }
 
 /*
- * Counting
+ * Counting in file
  */
-void CountingInit(const string &result_file,
+void CountingInFileInit(const string &result_file,
                   const vector<string> &parameters,
                   const vector<string> &performance_events,
                   unsigned int num_measurements) {
-    counting::Init(result_file, parameters, performance_events, num_measurements, OnErrorOrWarning);
+    counting_in_file::Init(result_file, parameters, performance_events, num_measurements, OnErrorOrWarning);
 }
 
-void CountingStart(const vector<string> &parameters) {
-    counting::Start(parameters, OnErrorOrWarning);
+void CountingInFileStart(const vector<string> &parameters) {
+    counting_in_file::Start(parameters, OnErrorOrWarning);
 }
 
-void CountingStop() {
-    counting::Stop(OnErrorOrWarning);
+void CountingInFileStop() {
+    counting_in_file::Stop(OnErrorOrWarning);
 }
 
-void CountingClose() {
-    counting::Close(OnErrorOrWarning);
+void CountingInFileClose() {
+    counting_in_file::Close(OnErrorOrWarning);
 }
 
 /*
- * Profiling
+ * Profiling in file
  */
-void ProfilingInit(const string &result_file,
+void ProfilingInFileInit(const string &result_file,
                    const string &overflow_event,
                    int overflow_threshold,
                    const vector<string> &performance_events,
                    bool include_inst_address) {
-    profiling::Init(
+    profiling_in_file::Init(
             result_file,
             overflow_event,
             overflow_threshold,
@@ -75,16 +77,16 @@ void ProfilingInit(const string &result_file,
             OnErrorOrWarning);
 }
 
-void ProfilingStart(const string &trace_header) {
-    profiling::Start(trace_header, OnErrorOrWarning);
+void ProfilingInFileStart(const string &trace_header) {
+    profiling_in_file::Start(trace_header, OnErrorOrWarning);
 }
 
-void ProfilingStop() {
-    profiling::Stop(OnErrorOrWarning);
+void ProfilingInFileStop() {
+    profiling_in_file::Stop(OnErrorOrWarning);
 }
 
-void ProfilingClose() {
-    profiling::Close(OnErrorOrWarning);
+void ProfilingInFileClose() {
+    profiling_in_file::Close(OnErrorOrWarning);
 }
 
 namespace py = pybind11;
@@ -125,33 +127,33 @@ PYBIND11_MODULE(peptalk, m) {
         Close timing module
     )pbdoc");
     /*
-     * Counting
+     * Counting in file
      */
-    m.def("counting_init", &CountingInit, R"pbdoc(
+    m.def("counting_in_file_init", &CountingInFileInit, R"pbdoc(
         Initialise counting module
     )pbdoc");
-    m.def("counting_start", &CountingStart, R"pbdoc(
+    m.def("counting_in_file_start", &CountingInFileStart, R"pbdoc(
         Start counting
     )pbdoc");
-    m.def("counting_stop", &CountingStop, R"pbdoc(
+    m.def("counting_in_file_stop", &CountingInFileStop, R"pbdoc(
         Stop counting
     )pbdoc");
-    m.def("counting_close", &CountingClose, R"pbdoc(
+    m.def("counting_in_file_close", &CountingInFileClose, R"pbdoc(
         Close counting module
     )pbdoc");
     /*
-     * Profiling
+     * Profiling in file
      */
-    m.def("profiling_init", &ProfilingInit, R"pbdoc(
+    m.def("profiling_in_file_init", &ProfilingInFileInit, R"pbdoc(
         Initialise profiling module
     )pbdoc");
-    m.def("profiling_start", &ProfilingStart, R"pbdoc(
+    m.def("profiling_in_file_start", &ProfilingInFileStart, R"pbdoc(
         Start profiling
     )pbdoc");
-    m.def("profiling_stop", &ProfilingStop, R"pbdoc(
+    m.def("profiling_in_file_stop", &ProfilingInFileStop, R"pbdoc(
         Stop profiling
     )pbdoc");
-    m.def("profiling_close", &ProfilingClose, R"pbdoc(
+    m.def("profiling_close", &ProfilingInFileClose, R"pbdoc(
         Close profiling module
     )pbdoc");
     m.attr("__version__") = "1.0";
