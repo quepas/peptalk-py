@@ -102,14 +102,14 @@ PYBIND11_MODULE(peptalk, m) {
             timing_start
             timing_stop
             timing_close
-            counting_init
-            counting_start
-            counting_stop
-            counting_close
-            profiling_init
-            profiling_start
-            profiling_stop
-            profiling_close
+            counting_in_file_init
+            counting_in_file_start
+            counting_in_file_stop
+            counting_in_file_close
+            profiling_in_file_init
+            profiling_in_file_start
+            profiling_in_file_stop
+            profiling_in_file_close
     )pbdoc";
     /*
      * Timing
