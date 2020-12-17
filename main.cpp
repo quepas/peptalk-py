@@ -9,6 +9,8 @@
 #include "profiling_in_file.hpp"
 
 using namespace peptalk;
+using std::map;
+using std::pair;
 using std::runtime_error;
 using std::string;
 using std::vector;
@@ -61,6 +63,54 @@ void CountingInFileClose() {
 }
 
 /*
+ * Profiling in memory
+ */
+void ProfilingInit(const vector<string> &events,
+                   bool instruction_address,
+                   int overflow_threshold) {
+    profiling::Init(events, instruction_address, overflow_threshold, OnErrorOrWarning);
+}
+
+void ProfilingStart() {
+    profiling::Start(OnErrorOrWarning);
+}
+
+void ProfilingStop() {
+    profiling::Stop(OnErrorOrWarning);
+}
+
+void ProfilingCleanup() {
+    profiling::Cleanup(OnErrorOrWarning);
+}
+
+int ProfilingNumProfile() {
+    return profiling::GetNumProfile();
+}
+
+const vector<peptalk::measurement_type>& ProfilingGetProfile(int index) {
+    return profiling::GetProfile(index);
+}
+
+const vector<peptalk::inst_address_type>& ProfilingGetInstructionAddress() {
+    return profiling::GetInstructionAddress();
+}
+
+string ProfilingGetEvent(int index) {
+    return profiling::GetProfileEvent(index);
+}
+
+vector<pair<string, vector<peptalk::measurement_type>>> ProfilingGetMeasurements() {
+    vector<pair<string, vector<peptalk::measurement_type>>> dict;
+    for (int profile_idx = 0; profile_idx < profiling::GetNumProfile(); ++profile_idx) {
+        auto event = profiling::GetProfileEvent(profile_idx);
+        auto measurements = profiling::GetProfile(profile_idx);
+        dict.push_back({event, {}});
+        dict[profile_idx].second.insert(dict[profile_idx].second.end(), measurements.begin(), measurements.end());
+    }
+    return dict;
+}
+
+/*
  * Profiling in file
  */
 void ProfilingInFileInit(const string &result_file,
@@ -106,6 +156,15 @@ PYBIND11_MODULE(peptalk, m) {
             counting_in_file_start
             counting_in_file_stop
             counting_in_file_close
+            profiling_init
+            profiling_start
+            profiling_stop
+            profiling_cleanup
+            profiling_num_profile
+            profiling_get_profile
+            profiling_get_inst_address
+            profiling_get_event
+            profiling_get_measurements
             profiling_in_file_init
             profiling_in_file_start
             profiling_in_file_stop
@@ -130,31 +189,61 @@ PYBIND11_MODULE(peptalk, m) {
      * Counting in file
      */
     m.def("counting_in_file_init", &CountingInFileInit, R"pbdoc(
-        Initialise counting module
+        Initialise in-file counting module
     )pbdoc");
     m.def("counting_in_file_start", &CountingInFileStart, R"pbdoc(
-        Start counting
+        Start in-file counting
     )pbdoc");
     m.def("counting_in_file_stop", &CountingInFileStop, R"pbdoc(
-        Stop counting
+        Stop in-file counting
     )pbdoc");
     m.def("counting_in_file_close", &CountingInFileClose, R"pbdoc(
-        Close counting module
+        Close in-file counting module
+    )pbdoc");
+    /*
+     * Profiling in memory
+     */
+    m.def("profiling_init", &ProfilingInit, R"pbdoc(
+        Initialise in-memory profiling module
+    )pbdoc");
+    m.def("profiling_start", &ProfilingStart, R"pbdoc(
+        Start in-memory profiling
+    )pbdoc");
+    m.def("profiling_stop", &ProfilingStop, R"pbdoc(
+        Stop in-memory profiling
+    )pbdoc");
+    m.def("profiling_cleanup", &ProfilingCleanup, R"pbdoc(
+        Cleanup in-memory profiling module
+    )pbdoc");
+    m.def("profiling_num_profile", &ProfilingNumProfile, R"pbdoc(
+        Return number of measured profiles
+    )pbdoc");
+    m.def("profiling_get_profile", &ProfilingGetProfile, R"pbdoc(
+        Get profile measurements
+    )pbdoc", py::arg("index"));
+    m.def("profiling_get_inst_address", &ProfilingGetInstructionAddress, R"pbdoc(
+        Get address of profiled instructions
+    )pbdoc");
+    m.def("profiling_get_event", &ProfilingGetEvent, R"pbdoc(
+        Get profile event
+    )pbdoc", py::arg("index"));
+    m.def("profiling_get_measurements", &ProfilingGetMeasurements, R"pbdoc(
+        Return measurements for profiles
     )pbdoc");
     /*
      * Profiling in file
      */
     m.def("profiling_in_file_init", &ProfilingInFileInit, R"pbdoc(
-        Initialise profiling module
+        Initialise in-file profiling module
     )pbdoc");
     m.def("profiling_in_file_start", &ProfilingInFileStart, R"pbdoc(
-        Start profiling
+        Start in-file profiling
     )pbdoc");
     m.def("profiling_in_file_stop", &ProfilingInFileStop, R"pbdoc(
-        Stop profiling
+        Stop in-file profiling
     )pbdoc");
-    m.def("profiling_close", &ProfilingInFileClose, R"pbdoc(
-        Close profiling module
+    m.def("profiling_in_file_close", &ProfilingInFileClose, R"pbdoc(
+        Close in-file profiling module
     )pbdoc");
     m.attr("__version__") = "1.0";
 }
