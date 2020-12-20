@@ -8,5 +8,5 @@ set( CMAKE_BUILD_TYPE Release )
 add_subdirectory( third-party/peptalk-core )
 add_subdirectory( third-party/pybind11 )
 
-pybind11_add_module( peptalk main.cpp )
-target_link_libraries( peptalk PRIVATE peptalk_core_static )
+pybind11_add_module( peptalk_core_impl main.cpp )
+target_link_libraries( peptalk_core_impl PRIVATE peptalk_core_static )

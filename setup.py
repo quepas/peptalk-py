@@ -71,7 +71,7 @@ setup(
     long_description='',
     url="https://github.com/quepas/peptalk-py.git",
     license="MIT License",
-    ext_modules=[CMakeExtension('peptalk')],
+    ext_modules=[CMakeExtension('peptalk_core_impl')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
 )

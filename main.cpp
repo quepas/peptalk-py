@@ -141,7 +141,7 @@ void ProfilingInFileClose() {
 
 namespace py = pybind11;
 
-PYBIND11_MODULE(peptalk, m) {
+PYBIND11_MODULE(peptalk_core_impl, m) {
     m.doc() = R"pbdoc(
         pep-talk library for Python
         -----------------------
@@ -215,7 +215,7 @@ PYBIND11_MODULE(peptalk, m) {
     m.def("profiling_cleanup", &ProfilingCleanup, R"pbdoc(
         Cleanup in-memory profiling module
     )pbdoc");
-    m.def("profiling_num_profile", &ProfilingNumProfile, R"pbdoc(
+    m.def("profiling_num_profile", &profiling::GetNumProfile, R"pbdoc(
         Return number of measured profiles
     )pbdoc");
     m.def("profiling_get_profile", &ProfilingGetProfile, R"pbdoc(
