@@ -72,5 +72,6 @@ setup(
     ext_modules=[CMakeExtension('peptalk_core_impl')],
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
+    packages=['peptalk']
 )
 

@@ -20,8 +20,8 @@ def plot_profiles(measurements):
     # Measurements has at least 2 elements (overflow event, and 1 measured event)
     num_profiles = len(measurements)
     fig, subplots = plt.subplots(num_profiles - 1, 1)
-    fig.suptitle('Performance event profiles')
     x = measurements[0][1]
+    fig.suptitle('Performance event profiles (samples={})'.format(len(x)))
     for k in range(1, num_profiles):
         y = [measurements[k][1][0]]
         y.extend(np.diff(measurements[k][1]).tolist())
