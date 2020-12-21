@@ -83,22 +83,6 @@ void ProfilingCleanup() {
     profiling::Cleanup(OnErrorOrWarning);
 }
 
-int ProfilingNumProfile() {
-    return profiling::GetNumProfile();
-}
-
-const vector<peptalk::measurement_type>& ProfilingGetProfile(int index) {
-    return profiling::GetProfile(index);
-}
-
-const vector<peptalk::inst_address_type>& ProfilingGetInstructionAddress() {
-    return profiling::GetInstructionAddress();
-}
-
-string ProfilingGetEvent(int index) {
-    return profiling::GetProfileEvent(index);
-}
-
 vector<pair<string, vector<peptalk::measurement_type>>> ProfilingGetMeasurements() {
     vector<pair<string, vector<peptalk::measurement_type>>> dict;
     for (int profile_idx = 0; profile_idx < profiling::GetNumProfile(); ++profile_idx) {
@@ -218,13 +202,13 @@ PYBIND11_MODULE(peptalk_core_impl, m) {
     m.def("profiling_num_profile", &profiling::GetNumProfile, R"pbdoc(
         Return number of measured profiles
     )pbdoc");
-    m.def("profiling_get_profile", &ProfilingGetProfile, R"pbdoc(
+    m.def("profiling_get_profile", &profiling::GetProfile, R"pbdoc(
         Get profile measurements
     )pbdoc", py::arg("index"));
-    m.def("profiling_get_inst_address", &ProfilingGetInstructionAddress, R"pbdoc(
+    m.def("profiling_get_inst_address", &profiling::GetInstructionAddress, R"pbdoc(
         Get address of profiled instructions
     )pbdoc");
-    m.def("profiling_get_event", &ProfilingGetEvent, R"pbdoc(
+    m.def("profiling_get_event", &profiling::GetProfileEvent, R"pbdoc(
         Get profile event
     )pbdoc", py::arg("index"));
     m.def("profiling_get_measurements", &ProfilingGetMeasurements, R"pbdoc(
