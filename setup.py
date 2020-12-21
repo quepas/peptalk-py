@@ -64,7 +64,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name="peptalk",
-    version="0.0.1",
+    version="0.1.0",
     author="quepas",
     author_email="kiepas.patryk@gmail.com",
     description="",
